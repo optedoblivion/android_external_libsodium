@@ -53,3 +53,4 @@ cp ${PREFIX}/lib/libsodium.js* test/js/
 cp ${PREFIX}/lib/libsodium-wrap.js test/js
 
 echo 'Done.'
+
