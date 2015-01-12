@@ -4,7 +4,7 @@ var libsodium = (function () {
 
 	var libsodium_raw = Module;
 	var result_encoding = 'uint8array';
-	//libsodium_raw._sodium_init();
+	libsodium_raw._sodium_init();
 
 	//---------------------------------------------------------------------------
 	// Horrifying UTF-8, base64 and hex codecs
