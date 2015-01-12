@@ -9,7 +9,6 @@ for (var i = 0; i < macrosFiles.length; i++){
 	var macroCode = fs.readFileSync(path.join(__dirname, 'macros', macrosFiles[i]), {encoding: 'utf8'});
 	macros[macroName] = macroCode;
 }
-//console.log('Macros loaded: ' + JSON.stringify(macros, '', '\t'));
 
 var templateCode = fs.readFileSync(path.join(__dirname, 'wrap-template.js'), {encoding: 'utf8'});
 
@@ -30,7 +29,6 @@ for (var i = 0; i < symbolsFiles.length; i++){
 	}
 	symbols.push(currentSymbol);
 }
-//console.log('Symbols descriptions loaded: ' + JSON.stringify(symbols, '', '\t'));
 
 //Load constants symbols
 loadConstants();
@@ -42,8 +40,6 @@ finalizeWrapper();
 
 function buildSymbol(symbolDescription){
 	if (typeof symbolDescription != 'object') throw new TypeError('symbolDescription must be a function');
-	//console.log('Building symbol: ' + JSON.stringify(symbolDescription));
-	//console.log('symbol type: ' + symbolDescription.type);
 	if (symbolDescription.type == 'function'){
 		var targetName = 'libsodium_raw._' + symbolDescription.name;
 		//Add encoding parameter to input list if encodingChoice is true
@@ -78,11 +74,10 @@ function buildSymbol(symbolDescription){
 				console.log('What the hell is the input type ' + currentParameter.type + ' ?');
 				process.exit(1);
 			}
-			//console.log(currentParameterCode);
 			funcBody += currentParameterCode + '\n';
 		}
 		funcCode += paramsArray + '){\n\t';
-		//funcCode += 'if (typeof ' + targetName + ' != \'function\') throw new TypeError(\'Undefined function\');\n\t';
+
 		//Writing the outputs declaration code
 		for (var i = 0; i < symbolDescription.outputs.length; i++){
 			var currentOutput = symbolDescription.outputs[i];
@@ -94,7 +89,6 @@ function buildSymbol(symbolDescription){
 				console.log('What the hell is the output type ' + currentOutput.type + ' ?');
 				process.exit(1);
 			}
-			//console.log(currentOutputCode);
 			funcBody += currentOutputCode + '\n';
 		}
 		//Writing the target call
@@ -104,7 +98,6 @@ function buildSymbol(symbolDescription){
 		funcCode += funcBody + '}\n';
 
 		functionsCode += funcCode;
-		//console.log('Function code:\n' + funcCode);
 		exportsCode += '\n\tif (typeof ' + targetName + ' == \'function\')  exports.' + symbolDescription.name + ' = ' + symbolDescription.name + ';';
 	} else if (symbolDescription.type == 'uint'){
 		var constVal = symbolDescription.target;
