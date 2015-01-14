@@ -3,6 +3,13 @@
 # include <cpu-features.h>
 #endif
 
+#ifdef _WIN32
+# define WINAPI_DESKTOP
+# if defined(WINAPI_FAMILY_ONE_PARTITION) && defined(WINAPI_FAMILY_DESKTOP) && !WINAPI_FAMILY_ONE_PARTITION(WINAPI_FAMILY_DESKTOP)
+#  undef WINAPI_DESKTOP
+# endif
+#endif
+
 #include "runtime.h"
 
 typedef struct CPUFeatures_ {
@@ -43,7 +50,7 @@ _sodium_runtime_arm_cpu_features(CPUFeatures * const cpu_features)
 static void
 _cpuid(unsigned int cpu_info[4U], const unsigned int cpu_info_type)
 {
-#ifdef _MSC_VER
+#if defined(_MSC_VER) && defined(WINAPI_DESKTOP)
     __cpuid((int *) cpu_info, cpu_info_type);
 #elif defined(HAVE_CPUID)
     cpu_info[0] = cpu_info[1] = cpu_info[2] = cpu_info[3] = 0;
